@@ -288,7 +288,6 @@ async function run() {
             const result = await ridersCollection.insertOne(rider);
             res.send(result);
         })
-
         app.get("/riders/active", async (req, res) => {
             const result = await ridersCollection.find({ status: "active" }).toArray();
             res.send(result);
