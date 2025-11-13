@@ -177,9 +177,40 @@ async function run() {
         });
 
 
+        // app.get('/parcels', verifyFBToken, async (req, res) => {
+        //     const parcels = await parcelCollection.find().toArray();
+        //     res.send(parcels);
+        // });
+
+        // GET: All parcels OR parcels by user (created_by), sorted by latest
         app.get('/parcels', verifyFBToken, async (req, res) => {
-            const parcels = await parcelCollection.find().toArray();
-            res.send(parcels);
+            try {
+                const { email, payment_status, delivery_status } = req.query;
+                let query = {}
+                if (email) {
+                    query = { created_by: email }
+                }
+
+                if (payment_status) {
+                    query.payment_status = payment_status
+                }
+
+                if (delivery_status) {
+                    query.delivery_status = delivery_status
+                }
+
+                const options = {
+                    sort: { createdAt: -1 }, // Newest first
+                };
+
+                console.log('parcel query', req.query, query)
+
+                const parcels = await parcelCollection.find(query, options).toArray();
+                res.send(parcels);
+            } catch (error) {
+                console.error('Error fetching parcels:', error);
+                res.status(500).send({ message: 'Failed to get parcels' });
+            }
         });
 
         // GET: Get a specific parcel by ID
@@ -199,7 +230,6 @@ async function run() {
                 res.status(500).send({ message: 'Failed to fetch parcel' });
             }
         });
-
 
 
         app.post('/create-payment-intent', async (req, res) => {
@@ -292,6 +322,7 @@ async function run() {
             const result = await ridersCollection.find({ status: "active" }).toArray();
             res.send(result);
         });
+
 
         app.get("/riders/pending", verifyFBToken, verifyAdmin, async (req, res) => {
             try {
