@@ -164,7 +164,7 @@ async function run() {
         //     }
         // });
 
-        app.patch("/users/:id/role", async (req, res) => {
+        app.patch("/users/:id/role", verifyFBToken, verifyAdmin, async (req, res) => {
             const { id } = req.params;
             const { role } = req.body;
 
@@ -288,7 +288,7 @@ async function run() {
             const result = await ridersCollection.insertOne(rider);
             res.send(result);
         })
-        app.get("/riders/active", async (req, res) => {
+        app.get("/riders/active", verifyFBToken, verifyAdmin, async (req, res) => {
             const result = await ridersCollection.find({ status: "active" }).toArray();
             res.send(result);
         });
