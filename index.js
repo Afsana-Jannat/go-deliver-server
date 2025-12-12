@@ -183,7 +183,6 @@ async function run() {
         });
 
         // updating
-
         // GET: Get user role by email
         app.get('/users/:email/role', async (req, res) => {
             try {
