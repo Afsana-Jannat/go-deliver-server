@@ -774,6 +774,29 @@ async function run() {
             }
         });
 
+        // GET parcel by tracking_id (QR scan support)
+        app.get("/parcels/track/:trackingId", async (req, res) => {
+            try {
+                const trackingId = req.params.trackingId;
+
+                const parcel = await parcelCollection.findOne({
+                    tracking_id: trackingId
+                });
+
+                if (!parcel) {
+                    return res.status(404).send({ message: "Parcel not found" });
+                }
+
+                res.send({
+                    success: true,
+                    parcel
+                });
+
+            } catch (error) {
+                console.error(error);
+                res.status(500).send({ message: "Failed to fetch parcel" });
+            }
+        });
 
 
 
