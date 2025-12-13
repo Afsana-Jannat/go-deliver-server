@@ -774,6 +774,35 @@ async function run() {
             }
         });
 
+
+        app.patch("/pickup/:trackingId", async (req, res) => {
+            const { trackingId } = req.params;
+
+            const result = await parcelCollection.updateOne(
+                { tracking_id: trackingId },
+                {
+                    $set: {
+                        delivery_status: "picked_up",
+                        pickedUpAt: new Date()
+                    }
+                }
+            );
+
+            res.send(result);
+        });
+
+        app.get("/track/:trackingId", async (req, res) => {
+            const { trackingId } = req.params;
+
+            const parcel = await parcelCollection.findOne({ tracking_id: trackingId });
+
+            if (!parcel) {
+                return res.status(404).send({ message: "Parcel not found" });
+            }
+
+            res.send(parcel);
+        });
+
         // GET parcel by tracking_id (QR scan support)
         app.get("/parcels/track/:trackingId", async (req, res) => {
             try {
