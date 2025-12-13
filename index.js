@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const Stripe = require("stripe");
 const admin = require("firebase-admin");
-
 dotenv.config();
 
 const app = express();
@@ -17,7 +16,6 @@ app.use(express.json());
 
 const decodedKey = Buffer.from(process.env.FB_SERVICE_KEY, 'base64').toString('utf-8');
 const serviceAccount = JSON.parse(decodedKey);
-
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -535,8 +533,6 @@ async function run() {
                 res.status(500).json({ error: error.message });
             }
         });
-
-
 
 
         app.get('/payments', async (req, res) => {
