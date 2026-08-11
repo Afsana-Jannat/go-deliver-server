@@ -3,3 +3,4 @@ node_modules
 firebase-admin-key.json
 firebase-key-base64.txt
 .vercel
+.env*
